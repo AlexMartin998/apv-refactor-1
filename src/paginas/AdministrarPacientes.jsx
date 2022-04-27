@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Formulario from '../components/Formulario';
 import ListadoPacientes from '../components/ListadoPacientes';
-import clienteAxios from '../config/axios';
+import {axiosClient}  from '../config/axios';
 import usePacientes from '../hooks/usePacientes';
 
 const validateTokenFromLS = () => {

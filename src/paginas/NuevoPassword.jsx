@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Alerta from '../components/Alerta';
-import clienteAxios from '../config/axios';
+import {axiosClient}  from '../config/axios';
 
 const NuevoPassword = () => {
   const [password, setPassword] = useState('')
@@ -15,7 +15,7 @@ const NuevoPassword = () => {
   useEffect(() => {
     const comprobarToken = async () => {
       try {
-          await clienteAxios(`/veterinarios/olvide-password/${token}`)
+          await axiosClient(`/veterinarios/olvide-password/${token}`)
           setAlerta({
             msg: 'Coloca tu Nuevo Password'
           })
@@ -43,7 +43,7 @@ const NuevoPassword = () => {
 
     try {
       const url = `/veterinarios/olvide-password/${token}`
-      const { data } = await clienteAxios.post(url, { password } )
+      const { data } = await axiosClient.post(url, { password } )
       setAlerta({
         msg: data.msg
       })

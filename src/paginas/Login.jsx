@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Alerta from '../components/Alerta';
 import useAuth from '../hooks/useAuth';
-import clienteAxios from '../config/axios';
+import {axiosClient}  from '../config/axios';
+import { fetchWithoutToken } from '../helpers/fetch';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,14 +27,16 @@ const Login = () => {
     }
 
     try {
-      const { data } = await clienteAxios.post('/veterinarios/login', {
-        email,
-        password,
-      });
+      const { data } = await fetchWithoutToken(
+        '/veterinarios/login',
+        { email, password },
+        'POST'
+      );
       localStorage.setItem('token', data.token);
       setAuth(data);
       navigate('/admin');
     } catch (error) {
+      console.log(error);
       setAlerta({
         msg: error.response.data.msg,
         error: true,

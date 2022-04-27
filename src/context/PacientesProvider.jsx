@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from 'react';
-import clienteAxios from '../config/axios';
+import {axiosClient}  from '../config/axios';
 
 const PacientesContext = createContext();
 
@@ -34,7 +34,7 @@ export const PacientesProvider = ({ children }) => {
       try {
         console.log('P4');
 
-        const { data } = await clienteAxios.put(
+        const { data } = await axiosClient.put(
           `/pacientes/${paciente.id}`,
           paciente,
           config
@@ -53,7 +53,7 @@ export const PacientesProvider = ({ children }) => {
       if (!config) return;
 
       try {
-        const { data } = await clienteAxios.post(
+        const { data } = await axiosClient.post(
           '/pacientes',
           paciente,
           config
@@ -81,7 +81,7 @@ export const PacientesProvider = ({ children }) => {
         const config = validateTokenFromLS();
         if (!config) return;
 
-        await clienteAxios.delete(`/pacientes/${id}`, config);
+        await axiosClient.delete(`/pacientes/${id}`, config);
 
         const pacientesActualizado = pacientes.filter(
           pacientesState => pacientesState._id !== id

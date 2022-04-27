@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Alerta from '../components/Alerta';
-import clienteAxios from '../config/axios'; 
+import {axiosClient}  from '../config/axios'; 
 
 const OlvidePassword = () => {
     const [email, setEmail] = useState('')
@@ -17,7 +17,7 @@ const OlvidePassword = () => {
         }
 
         try {
-            const { data } = await clienteAxios.post('/veterinarios/olvide-password', { email })
+            const { data } = await axiosClient.post('/veterinarios/olvide-password', { email })
             setAlerta({msg: data.msg})
         } catch (error) {
             setAlerta({

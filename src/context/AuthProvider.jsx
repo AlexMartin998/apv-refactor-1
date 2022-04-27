@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext } from 'react';
-import clienteAxios from '../config/axios';
+import { axiosClient } from '../config/axios';
+import { fetchWithoutToken } from '../helpers/fetch';
 // juan1@juan.com
 const AuthContext = createContext();
 
@@ -25,7 +26,7 @@ const AuthProvider = ({ children }) => {
       if (!config) return setCargando(false);
 
       try {
-        const { data } = await clienteAxios('/veterinarios/perfil', config);
+        const { data } = await axiosClient('/veterinarios/perfil', config);
         setAuth(data);
       } catch (error) {
         console.log(error.response.data.msg);
@@ -48,7 +49,7 @@ const AuthProvider = ({ children }) => {
 
     try {
       const url = `/veterinarios/perfil/${datos._id}`;
-      await clienteAxios.put(url, datos, config);
+      await axiosClient.put(url, datos, config);
 
       return {
         msg: 'Almacenado Correctamente',
@@ -68,7 +69,7 @@ const AuthProvider = ({ children }) => {
     try {
       const url = '/veterinarios/actualizar-password';
 
-      const { data } = await clienteAxios.put(url, datos, config);
+      const { data } = await axiosClient.put(url, datos, config);
       console.log(data);
 
       return {

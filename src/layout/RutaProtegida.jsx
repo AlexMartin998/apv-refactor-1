@@ -2,7 +2,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import useAuth from '../hooks/useAuth';
-import clienteAxios from '../config/axios';
+import {axiosClient}  from '../config/axios';
 import usePacientes from '../hooks/usePacientes';
 import { useEffect } from 'react';
 
@@ -28,7 +28,7 @@ const RutaProtegida = () => {
         const config = validateTokenFromLS();
         if (!config) return;
 
-        const { data } = await clienteAxios('/pacientes', config);
+        const { data } = await axiosClient('/pacientes', config);
         setPatients(data);
       } catch (error) {
         console.log(error);
