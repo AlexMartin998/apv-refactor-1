@@ -45,6 +45,7 @@ export const Login = () => {
       navigate('/admin');
     } catch (error) {
       // console.log(error.response.data);
+      console.log(error);
       setAlerta({
         msg: error.response.data.msg,
         error: true,

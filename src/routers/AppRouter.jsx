@@ -7,8 +7,18 @@ import { PatientManagement } from '../pages/PatientManagement';
 import { PrivateRoute } from './PrivateRoute';
 import { PublicRoute } from './PublicRouter';
 import { DashboardLayout } from '../layout/DashboardPrivateLayout';
+import useAuth from '../hooks/useAuth';
 
 export const AppRouter = () => {
+  const { cargando } = useAuth();
+  if (cargando)
+    return (
+      <p className="text-3xl my-auto text-green-900 font-black">
+        Loading... AppRouter
+      </p>
+    );
+    
+
   return (
     <BrowserRouter>
       <Routes>
