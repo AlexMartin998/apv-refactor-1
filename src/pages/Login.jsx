@@ -1,29 +1,38 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Alerta from '../components/Alerta';
+
 import useAuth from '../hooks/useAuth';
+import { useForm } from '../hooks/useForm';
+import Alerta from '../components/Alerta';
 import { fetchWithoutToken } from '../helpers/fetch';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [alerta, setAlerta] = useState({});
-
+export const Login = () => {
+  const navigate = useNavigate();
   const { setAuth } = useAuth();
 
-  const navigate = useNavigate();
+  const [formLoginValues, handleLoginInputChange] = useForm({
+    email: '',
+    password: '',
+  });
+  const [alerta, setAlerta] = useState({});
+
+  const { email, password } = formLoginValues;
+  const { msg } = alerta;
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if ([email, password].includes('')) {
-      setAlerta({
-        msg: 'Todos los campos son obligatorios',
+    if (!email || !password)
+      return setAlerta({
+        msg: 'Todos los campos son obligatorios!',
         error: true,
       });
 
-      return;
-    }
+    if (password.length < 6)
+      return setAlerta({
+        msg: 'El password debe tener almenos 6 caracteres!',
+        error: true,
+      });
 
     try {
       const { data } = await fetchWithoutToken(
@@ -35,7 +44,7 @@ const Login = () => {
       setAuth(data);
       navigate('/admin');
     } catch (error) {
-      console.log(error);
+      // console.log(error.response.data);
       setAlerta({
         msg: error.response.data.msg,
         error: true,
@@ -43,7 +52,6 @@ const Login = () => {
     }
   };
 
-  const { msg } = alerta;
   return (
     <>
       <div>
@@ -65,8 +73,9 @@ const Login = () => {
               type="email"
               placeholder="Email de Registro"
               className="border w-full p-3 mt-3 bg-gray-50 rounded-xl"
+              name="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={handleLoginInputChange}
             />
           </div>
           <div className="my-5">
@@ -77,8 +86,9 @@ const Login = () => {
               type="password"
               placeholder="Tu Password"
               className="border w-full p-3 mt-3 bg-gray-50 rounded-xl"
+              name="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={handleLoginInputChange}
             />
           </div>
 
@@ -107,5 +117,3 @@ const Login = () => {
     </>
   );
 };
-
-export default Login;

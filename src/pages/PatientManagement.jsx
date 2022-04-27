@@ -1,9 +1,20 @@
 import { useState, useEffect } from 'react';
-
 import Formulario from '../components/Formulario';
 import ListadoPacientes from '../components/ListadoPacientes';
 
-const AdministrarPacientes = () => {
+const validateTokenFromLS = () => {
+  const token = localStorage.getItem('token');
+  if (!token) return false;
+
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
+export const PatientManagement = () => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
   return (
@@ -30,5 +41,3 @@ const AdministrarPacientes = () => {
     </div>
   );
 };
-
-export default AdministrarPacientes;
