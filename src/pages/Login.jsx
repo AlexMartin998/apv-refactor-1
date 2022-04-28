@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import useAuth from '../hooks/useAuth';
 import { useForm } from '../hooks/useForm';
-import Alerta from '../components/Alerta';
+import { Alert } from '../components/Alerta';
 import { fetchWithoutToken } from '../helpers/fetch';
 
 export const Login = () => {
@@ -45,7 +45,7 @@ export const Login = () => {
       navigate('/admin');
     } catch (error) {
       // console.log(error.response.data);
-      console.log(error);
+      // console.log(error);
       setAlerta({
         msg: error.response.data.msg,
         error: true,
@@ -63,7 +63,7 @@ export const Login = () => {
       </div>
 
       <div className="mt-20 md:mt-5 shadow-lg px-5 py-10 rounded-xl bg-white">
-        {msg && <Alerta alerta={alerta} />}
+        {msg && <Alert alerta={alerta} />}
 
         <form onSubmit={handleSubmit}>
           <div className="my-5">

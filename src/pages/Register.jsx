@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Alert } from '../components/Alert';
+import { Alert } from '../components/Alerta';
 import { axiosClient } from '../config/axios';
+import { useForm } from '../hooks/useForm';
 
 export const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+  const [formValues, handleInputChange] = useForm({
+    nombre: '',
+    email: '',
+    password: '',
+    repetirPassword: '',
+  });
+  const { nombre, email, password, repetirPassword } = formValues;
 
   const [alerta, setAlerta] = useState({});
+  const { msg } = alerta;
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    if ([name, email, password, repeatPassword].includes(''))
+    if ([nombre, email, password, repetirPassword].includes(''))
       return setAlerta({ msg: 'Hay campos vacios', error: true });
 
-    if (password !== repeatPassword)
+    if (password !== repetirPassword)
       return setAlerta({ msg: 'Los passwords no son iguales', error: true });
 
     if (password.length < 6)
@@ -31,7 +36,7 @@ export const Register = () => {
 
     // Crear el user en DB
     try {
-      await axiosClient.post('/veterinarians', { name, email, password });
+      await axiosClient.post('/veterinarios', { nombre, email, password });
 
       setAlerta({
         msg: 'Usuario creado correctamente, revisa tu email',
@@ -39,13 +44,11 @@ export const Register = () => {
       });
     } catch (error) {
       setAlerta({
-        msg: error.response.data.errors[0].msg,
+        msg: error.response.data.msg,
         error: true,
       });
     }
   };
-
-  const { msg } = alerta;
 
   return (
     <>
@@ -70,9 +73,9 @@ export const Register = () => {
               className="border w-full p-3 mt-3 bg-gray-50 rounded-xl"
               autoComplete="off"
               autoFocus={true}
-              name="name"
-              value={name}
-              onChange={e => setName(e.target.value)}
+              name="nombre"
+              value={nombre}
+              onChange={handleInputChange}
             />
           </div>
           <div className="my-5">
@@ -86,7 +89,7 @@ export const Register = () => {
               // autoComplete="off"
               name="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={handleInputChange}
             />
           </div>
           <div className="my-5">
@@ -99,7 +102,7 @@ export const Register = () => {
               className="border w-full p-3 mt-3 bg-gray-50 rounded-xl"
               name="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={handleInputChange}
             />
           </div>
           <div className="my-5">
@@ -110,9 +113,9 @@ export const Register = () => {
               type="password"
               placeholder="Repite tu Password"
               className="border w-full p-3 mt-3 bg-gray-50 rounded-xl"
-              name="repeatPassword"
-              value={repeatPassword}
-              onChange={e => setRepeatPassword(e.target.value)}
+              name="repetirPassword"
+              value={repetirPassword}
+              onChange={handleInputChange}
             />
           </div>
 

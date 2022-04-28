@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from 'react';
-import {axiosClient}  from '../config/axios';
+import { axiosClient } from '../config/axios';
 
 const PacientesContext = createContext();
 
@@ -53,11 +53,7 @@ export const PacientesProvider = ({ children }) => {
       if (!config) return;
 
       try {
-        const { data } = await axiosClient.post(
-          '/pacientes',
-          paciente,
-          config
-        );
+        const { data } = await axiosClient.post('/pacientes', paciente, config);
         const { createdAt, updatedAt, __v, ...pacienteAlmacenado } = data;
         setPacientes([pacienteAlmacenado, ...pacientes]);
       } catch (error) {

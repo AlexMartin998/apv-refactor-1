@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Alerta from '../components/Alerta';
+import { Alert } from '../components/Alerta';
 import useAuth from '../hooks/useAuth';
 import { fetchWithoutToken } from '../helpers/fetch';
 
