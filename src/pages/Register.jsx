@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Alert } from '../components/Alerta';
-import { axiosClient } from '../config/axios';
 import { useForm } from '../hooks/useForm';
+import { Alert } from '../components/Alerta';
+import { fetchWithoutToken } from '../helpers/fetch';
 
 export const Register = () => {
   const [formValues, handleInputChange] = useForm({
@@ -36,7 +36,11 @@ export const Register = () => {
 
     // Crear el user en DB
     try {
-      await axiosClient.post('/veterinarios', { nombre, email, password });
+      await fetchWithoutToken(
+        '/veterinarios',
+        { nombre, email, password },
+        'POST'
+      );
 
       setAlerta({
         msg: 'Usuario creado correctamente, revisa tu email',

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+
 import { Alert } from '../components/Alerta';
-import { axiosClient } from '../config/axios';
 import { fetchWithoutToken } from '../helpers/fetch';
 
 export const ConfirmAccount = () => {
@@ -17,9 +17,6 @@ export const ConfirmAccount = () => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        // const url = `/veterinarios/confirmar/${token}`;
-        // const { data } = await axiosClient(url);
-
         const { data } = await fetchWithoutToken(
           `/veterinarios/confirmar/${token}`
         );

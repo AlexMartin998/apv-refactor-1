@@ -107,7 +107,7 @@ export default AuthContext;
 
 import { useState, useEffect, createContext } from 'react';
 import { axiosClient } from '../config/axios';
-import { fetchWithoutToken, fetchWithToken } from '../helpers/fetch';
+import { fetchWithToken } from '../helpers/fetch';
 // juan1@juan.com
 const AuthContext = createContext();
 let tokenJWT;
