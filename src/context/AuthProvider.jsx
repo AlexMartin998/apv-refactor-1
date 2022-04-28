@@ -106,7 +106,6 @@ export default AuthContext;
  */
 
 import { useState, useEffect, createContext } from 'react';
-import { axiosClient } from '../config/axios';
 import { fetchWithToken } from '../helpers/fetch';
 // juan1@juan.com
 const AuthContext = createContext();
@@ -151,23 +150,20 @@ const AuthProvider = ({ children }) => {
     setAuth({});
   };
 
-  // // // //
   const actualizarPerfil = async datos => {
     validateTokenFromLS();
     if (!tokenJWT) return setCargando(false);
 
     try {
       const url = `/veterinarios/perfil/${datos._id}`;
-      await axiosClient.put(url, datos, config);
+      await fetchWithToken(url, 'PUT', tokenJWT, datos);
 
       return {
         msg: 'Almacenado Correctamente',
+        error: false,
       };
     } catch (error) {
-      return {
-        msg: error.response.data.msg,
-        error: true,
-      };
+      if (error) throw error;
     }
   };
 
@@ -177,18 +173,13 @@ const AuthProvider = ({ children }) => {
 
     try {
       const url = '/veterinarios/actualizar-password';
-
-      const { data } = await axiosClient.put(url, datos, config);
-      console.log(data);
+      const { data } = await fetchWithToken(url, 'PUT', tokenJWT, datos);
 
       return {
         msg: data.msg,
       };
     } catch (error) {
-      return {
-        msg: error.response.data.msg,
-        error: true,
-      };
+      if (error) throw error;
     }
   };
 

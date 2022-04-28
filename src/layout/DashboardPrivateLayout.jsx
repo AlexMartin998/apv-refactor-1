@@ -1,24 +1,15 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { axiosClient } from '../config/axios';
 import usePacientes from '../hooks/usePacientes';
+import { fetchWithToken } from '../helpers/fetch';
 
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { fetchWithToken } from '../helpers/fetch';
 
-const validateTokenFromLS = () => {
-  const token = localStorage.getItem('token');
-  if (!token) return false;
-
-  return {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
+let tokenJWT;
+const validateTokenFromLS = () =>
+  (tokenJWT = localStorage.getItem('token') || false);
 
 export const DashboardLayout = () => {
   const { setPatients } = usePacientes();
@@ -26,20 +17,20 @@ export const DashboardLayout = () => {
   useEffect(() => {
     const obtenerPacientes = async () => {
       try {
-        const config = validateTokenFromLS();
-        if (!config) return;
+        validateTokenFromLS();
+        if (!tokenJWT) return;
 
-        const { data } = await axiosClient('/pacientes', config);
-        // const { data } = await fetchWithToken('/pacientes');
+        const { data } = await fetchWithToken('/pacientes', 'GET', tokenJWT);
         setPatients(data);
+
+        console.log('PRIVATE - Dashboard');
       } catch (error) {
         console.log(error);
       }
     };
+
     obtenerPacientes();
   }, []);
-
-  console.log('PRIVATE - Dashboard');
 
   return (
     <>

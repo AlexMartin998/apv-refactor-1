@@ -13,12 +13,14 @@ import { ConfirmAccount } from '../pages/ConfirmAccount';
 import { PasswordRecovery } from '../pages/PasswordRecovery';
 import { PatientManagement } from '../pages/PatientManagement';
 import { NewPassword } from '../pages/NewPassword';
+import { ChangePassword } from '../pages/ChangePassword';
+import { EditProfile } from '../pages/EditProfile';
 
 export const AppRouter = () => {
   const { cargando } = useAuth();
   if (cargando)
     return (
-      <p className="text-3xl my-auto text-green-900 font-black">
+      <p className="flex justify-center items-center h-screen text-4xl my-auto text-green-900 font-black">
         Loading... AppRouter
       </p>
     );
@@ -50,6 +52,8 @@ export const AppRouter = () => {
           }
         >
           <Route index element={<PatientManagement />} />
+          <Route path="perfil" element={<EditProfile />} />
+          <Route path="cambiar-password" element={<ChangePassword />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

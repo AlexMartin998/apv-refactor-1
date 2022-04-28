@@ -98,7 +98,6 @@ export const fetchWithToken = async (endpoint, method = 'GET', token, data) => {
       },
     });
   else {
-    console.log(`Bearer ${token}`);
     return await axiosClient(endpoint, setConfig(method, data, token));
   }
 };
