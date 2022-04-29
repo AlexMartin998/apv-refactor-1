@@ -42,7 +42,9 @@ export const Login = () => {
       );
       localStorage.setItem('token', data.token);
       setAuth(data);
-      navigate('/admin');
+
+      const lastPath = localStorage.getItem('lastPath') || '/admin';
+      navigate(`${lastPath}`, { replace: true });
     } catch (error) {
       // console.log(error.response.data);
       // console.log(error);

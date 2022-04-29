@@ -1,19 +1,13 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
-import { axiosClient } from '../config/axios';
+import { createContext, useState, useCallback } from 'react';
+
+import { fetchWithToken } from '../helpers/fetch';
 
 const PacientesContext = createContext();
 
-const validateTokenFromLS = () => {
-  const token = localStorage.getItem('token');
-  if (!token) return false;
+let tokenJWT;
 
-  return {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
+const validateTokenFromLS = () =>
+  (tokenJWT = localStorage.getItem('token') || false);
 
 export const PacientesProvider = ({ children }) => {
   const [pacientes, setPacientes] = useState([]);
@@ -27,49 +21,61 @@ export const PacientesProvider = ({ children }) => {
   );
 
   const guardarPaciente = async paciente => {
-    const config = validateTokenFromLS();
-    if (!config) return;
+    console.log(paciente, paciente.id, Boolean(paciente.id));
+    validateTokenFromLS();
+    if (!tokenJWT) return;
 
     if (paciente.id) {
       try {
-        console.log('P4');
-
-        const { data } = await axiosClient.put(
+        const { data } = await fetchWithToken(
           `/pacientes/${paciente.id}`,
-          paciente,
-          config
+          'PUT',
+          tokenJWT,
+          paciente
         );
 
         const pacientesActualizado = pacientes.map(pacienteState =>
           pacienteState._id === data._id ? data : pacienteState
         );
         setPacientes(pacientesActualizado);
+        setPaciente({});
       } catch (error) {
-        console.log(error);
+        if (error) throw error;
       }
     } else {
-      console.log('P3');
-      const config = validateTokenFromLS();
-      if (!config) return;
+      validateTokenFromLS();
+      if (!tokenJWT) return;
 
       try {
-        const { data } = await axiosClient.post('/pacientes', paciente, config);
+        const { data } = await fetchWithToken(
+          '/pacientes',
+          'POST',
+          tokenJWT,
+          paciente
+        );
+
+        // eslint-disable-next-line no-unused-vars
         const { createdAt, updatedAt, __v, ...pacienteAlmacenado } = data;
         setPacientes([pacienteAlmacenado, ...pacientes]);
       } catch (error) {
         console.log(error.response.data.msg);
+        if (error) throw error;
       }
     }
   };
 
-  const setEdicion = paciente => {
-    const config = validateTokenFromLS();
-    if (!config) return;
+  // TODO: Limpiar pacientes al hacer logout
 
+  const setEdicion = paciente => {
+    validateTokenFromLS();
+    if (!tokenJWT) return;
     setPaciente(paciente);
   };
 
   const eliminarPaciente = async id => {
+    validateTokenFromLS();
+    if (!tokenJWT) return;
+
     const confirmar = confirm('¿Confirmas que deseas eliminar ?');
 
     if (confirmar) {
@@ -77,7 +83,7 @@ export const PacientesProvider = ({ children }) => {
         const config = validateTokenFromLS();
         if (!config) return;
 
-        await axiosClient.delete(`/pacientes/${id}`, config);
+        await fetchWithToken(`/pacientes/${id}`, 'DELETE', tokenJWT);
 
         const pacientesActualizado = pacientes.filter(
           pacientesState => pacientesState._id !== id
@@ -85,6 +91,7 @@ export const PacientesProvider = ({ children }) => {
         setPacientes(pacientesActualizado);
       } catch (error) {
         console.log(error);
+        if (error) throw error;
       }
     }
   };
@@ -106,9 +113,3 @@ export const PacientesProvider = ({ children }) => {
 };
 
 export default PacientesContext;
-
-/* 
-juan1@juan.com
-* a3f8902 (HEAD -> main, origin/main) Public routes added
-* 8f733a4 change password added
-*/

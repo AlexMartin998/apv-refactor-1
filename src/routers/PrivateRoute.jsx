@@ -3,12 +3,9 @@ import useAuth from '../hooks/useAuth';
 
 export const PrivateRoute = ({ children }) => {
   const { auth } = useAuth();
+  const { pathname } = useLocation();
 
-  return !auth?._id ? <Navigate to="/" replace /> : children;
+  localStorage.setItem('lastPath', pathname);
 
-  // const { pathname, search } = useLocation();
-
-  // localStorage.setItem('lastPath', pathname + search);
-
-  // return !uid ? <Navigate to="/login" /> : children;
+  return !auth?._id ? <Navigate to="/" /> : children;
 };

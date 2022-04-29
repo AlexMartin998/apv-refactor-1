@@ -9,22 +9,27 @@ const initState = {
   email: '',
   fecha: '',
   sintomas: '',
-  id: '',
+  _id: '',
 };
 
 const Formulario = () => {
-  const [formValues, handleInputChange, reset] = useForm(initState);
-  const { nombre, propietario, email, fecha, sintomas, id } = formValues;
+  const [formValues, handleInputChange, reset, setFormValues] =
+    useForm(initState);
 
   const [alerta, setAlerta] = useState({});
+  const [id, setId] = useState(null);
+  const { msg } = alerta;
 
-  const { guardarPaciente, paciente } = usePacientes();
+  const { guardarPaciente, paciente, setEdicion } = usePacientes();
 
   useEffect(() => {
     if (paciente?.nombre) {
-      reset();
+      setFormValues(paciente);
+      setId(paciente._id);
     }
   }, [paciente]);
+
+  const { nombre, propietario, email, fecha, sintomas } = formValues;
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -37,15 +42,21 @@ const Formulario = () => {
       });
       return;
     }
-
     guardarPaciente({ nombre, propietario, email, fecha, sintomas, id });
     setAlerta({
       msg: 'Guardado Correctamente',
+      error: false,
     });
     reset();
+    setId(null);
   };
 
-  const { msg } = alerta;
+  const handleResetForm = () => {
+    reset();
+    setEdicion({});
+    setId(null);
+  };
+
   return (
     <>
       <h2 className="font-black text-3xl text-center">
@@ -150,7 +161,7 @@ const Formulario = () => {
           type="button"
           value="Reset Form"
           className="bg-red-500 w-full mt-4 p-3 text-white uppercase font-bold hover:bg-red-700 cursor-pointer transition-colors"
-          onClick={() => reset()}
+          onClick={handleResetForm}
         />
       </form>
 

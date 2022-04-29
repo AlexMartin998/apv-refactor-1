@@ -1,12 +1,10 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 export const PublicRoute = ({ children }) => {
   const { auth } = useAuth();
 
-  return !auth?._id ? children : <Navigate to="/admin" replace />;
+  const lastPath = localStorage.getItem('lastPath') || '/admin';
 
-  // localStorage.setItem('lastPath', pathname + search);
-
-  // return !uid ? <Navigate to="/login" /> : children;
+  return !auth?._id ? children : <Navigate to={`${lastPath}`} replace />;
 };
